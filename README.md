@@ -2,7 +2,7 @@
 Emonitor is a small tool which can be used for monitoring official currency exchange rates of "Lietuvos Bankas"(Lbank.lt website).
 
 ## What data does Lbank.lt provide?
-Lbank.lt provides currency exchange rate data in XML and CSV file formats.
+Lbank.lt provides currency exchange rate data in XML and CSV file formats for .
 
 ### The data provided is:
 - DATE - date of the exchange rate value
@@ -16,6 +16,10 @@ Lbank.lt provides currency exchange rate data in XML and CSV file formats.
 - dtTo - exchange rate date period end (ISO 8601)
 
 ## How to run the program:
+To get info about Emonitor use -h parameter.
+	java Emonitor -h 
+To get available currency codes list use -l parameter.
+	java Emonitor -l
 ### Passing parameters through console:
 	java Emonitor <ccy_list> <start_date> <end_date>
 	
