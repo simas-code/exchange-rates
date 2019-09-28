@@ -21,26 +21,39 @@ public class Request {
 	}
 	
 	public void setCcy(String ccy) throws Exception {
-		if (ccy.length() != 3 || !ccy.matches("^[a-zA-Z]*$" )){
-			throw new Exception("Wrong \"ccy\" parammeter value.");
+		if (ccy != null) {
+			if (ccy.length() != 3 || !ccy.matches("^[a-zA-Z]*$" )){
+				throw new Exception("Wrong \"ccy\" parammeter value.");
+			} else {
+				this.ccy = ccy.toUpperCase();
+			}
 		} else {
-			this.ccy = ccy.toUpperCase();
+			this.ccy = null;
 		}
+		
 	}
 	
 	public void setFrom(String from) throws Exception {
-		if (!from.matches("^((2[0-9])[0-9]{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$")) {
-			throw new Exception("Wrong \"from\" parammeter value.");
+		if (from != null) {
+			if (!from.matches("^((2[0-9])[0-9]{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$")) {
+				throw new Exception("Wrong \"from\" parammeter value.");
+			} else {
+				this.from = from;
+			}
 		} else {
-			this.from = from;
+			this.from = null;
 		}
 	}
 	
 	public void setTo(String to) throws Exception {
-		if (!to.matches("^((2[0-9])[0-9]{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$")) {
-			throw new Exception("Wrong \"to\" parammeter value.");
+		if (to != null) {
+			if (!to.matches("^((2[0-9])[0-9]{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$")) {
+				throw new Exception("Wrong \"to\" parammeter value.");
+			} else {
+				this.to = to;
+			}
 		} else {
-			this.to = to;
+			this.to = null;
 		}
 	}
 	
@@ -61,6 +74,8 @@ public class Request {
 				this.from == null && 
 				this.to != null ) {
 			this.url = "http://www.lb.lt/webservices/fxrates/FxRates.asmx/getFxRatesForCurrency?tp=EU&ccy=" + this.ccy + "&dtFrom=" + "&dtTo=" ;
+		} else {
+			this.url = "http://www.lb.lt//webservices/fxrates/FxRates.asmx/getCurrencyList";
 		}
 	}
 	

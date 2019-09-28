@@ -35,29 +35,41 @@ public class EMonitor {
 			    DocumentBuilder b = f.newDocumentBuilder();
 			    Document doc = b.parse(con.getInputStream());
 			    doc.getDocumentElement().normalize();
-
-			    if ((doc.getElementsByTagName("Err")).getLength() > 0){
-			    	System.out.println("Currency " + r.getCcy() + ": " + (doc.getElementsByTagName("Desc")).item(0).getTextContent());
+			    
+			    if (r.getCcy() == null) {
+			    	NodeList ccy = doc.getElementsByTagName("Ccy");
+			    	NodeList ccy_desc = doc.getElementsByTagName("CcyNm");
+			    	for (int i = 0, z =1; i < ccy.getLength(); i++, z+=2) {
+			    		Node node_ccy = ccy.item(i);
+			    		Node node_ccy_desc = ccy_desc.item(z);
+			    		System.out.printf (node_ccy.getTextContent()  + " " + node_ccy_desc.getTextContent() + "\n");
+			    	}
+			    	
+			    	
 			    } else {
-			    	NodeList nodeList_date = doc.getElementsByTagName("Dt");
-				    NodeList nodeList_ccyamt = doc.getElementsByTagName("Amt");
-
-				    System.out.println("------------------------------------------------");
-		            System.out.printf("|%10s|%6s|%6s|%6s|%6s|%7s|\n", "DATE","CUR","AMT","CUR","AMT","DIFF");
-		            System.out.println("------------------------------------------------");
-				    for (int i = 0, z = 0; i < nodeList_date.getLength(); i++,z+=2) {
-				        Node node_i = nodeList_date.item(i);		// Date
-				        Node node_z1 = nodeList_ccyamt.item(z); 	// EUR amount
-				        Node node_z2 = nodeList_ccyamt.item(z+1); 	// Chosen curr amount
-				        BigDecimal curr_rat = new BigDecimal(nodeList_ccyamt.item(nodeList_ccyamt.getLength()-1).getTextContent()); // Period start curr amount
-				        
-				        if (node_i.getNodeType() == Node.ELEMENT_NODE &&
-				        		node_z1.getNodeType() == Node.ELEMENT_NODE &&
-				        		node_z2.getNodeType() == Node.ELEMENT_NODE ) {
-				        	System.out.printf ("|%10s|%6s|%.4f|%6s|%.4f|%+.4f|\n",node_i.getTextContent(),"EUR",new BigDecimal(node_z1.getTextContent()), r.getCcy(),new BigDecimal(node_z2.getTextContent()),new BigDecimal(node_z2.getTextContent()).subtract(curr_rat));
-				        }
+				    if ((doc.getElementsByTagName("Err")).getLength() > 0){
+				    	System.out.println("Currency " + r.getCcy() + ": " + (doc.getElementsByTagName("Desc")).item(0).getTextContent());
+				    } else {
+				    	NodeList nodeList_date = doc.getElementsByTagName("Dt");
+					    NodeList nodeList_ccyamt = doc.getElementsByTagName("Amt");
+	
+					    System.out.println("------------------------------------------------");
+			            System.out.printf("|%10s|%6s|%6s|%6s|%6s|%7s|\n", "DATE","CUR","AMT","CUR","AMT","DIFF");
+			            System.out.println("------------------------------------------------");
+					    for (int i = 0, z = 0; i < nodeList_date.getLength(); i++,z+=2) {
+					        Node node_i = nodeList_date.item(i);		// Date
+					        Node node_z1 = nodeList_ccyamt.item(z); 	// EUR amount
+					        Node node_z2 = nodeList_ccyamt.item(z+1); 	// Chosen curr amount
+					        BigDecimal curr_rat = new BigDecimal(nodeList_ccyamt.item(nodeList_ccyamt.getLength()-1).getTextContent()); // Period start curr amount
+					        
+					        if (node_i.getNodeType() == Node.ELEMENT_NODE &&
+					        		node_z1.getNodeType() == Node.ELEMENT_NODE &&
+					        		node_z2.getNodeType() == Node.ELEMENT_NODE ) {
+					        	System.out.printf ("|%10s|%6s|%.4f|%6s|%.4f|%+.4f|\n",node_i.getTextContent(),"EUR",new BigDecimal(node_z1.getTextContent()), r.getCcy(),new BigDecimal(node_z2.getTextContent()),new BigDecimal(node_z2.getTextContent()).subtract(curr_rat));
+					        }
+					    }
+					    System.out.println("------------------------------------------------\n");
 				    }
-				    System.out.println("------------------------------------------------\n");
 			    }
 			}
 		} catch(Exception e) {
@@ -171,7 +183,12 @@ public class EMonitor {
 		try {
 			System.out.print("Emonitor is a program which can be used for monitoring currency exchange rates data from Lbank.lt website.\n");
 			if (args.length > 0) {
-				if (args[0].equals("-h")) {
+				if (args[0].equals("-l")) {
+					System.out.print( "Available currency codes list:\n");
+					ArrayList<Request> templist =  new ArrayList<>();
+					templist.add(new Request(null,null,null));
+					sendRequests(templist);
+				} else if (args[0].equals("-h")) {
 					System.out.print( "Help.\n"
 					+ "Sending parameters through console is in this format: java Emonitor <ccy_list> <date_from> <date_to> .\n"
 					+ "Example_1: program AUD;USD;GBP 2019-09-01 2019-09-05.\n"
