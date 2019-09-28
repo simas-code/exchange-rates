@@ -5,7 +5,7 @@ Emonitor is a small tool which can be used for monitoring official currency exch
 Lbank.lt provides currency exchange rate data in XML and CSV file formats for .
 
 ### The data provided is:
-- DATE - date of the exchange rate value
+- DATE - date of the exchange rate value (from 2014-09-30)
 - CCY - Currency code (USD,AUD,etc)
 - AMT - Value of the currency at the given date
 
