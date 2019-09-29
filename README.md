@@ -1,5 +1,5 @@
 # Emonitor
-Emonitor is a small tool which can be used for monitoring official currency exchange rates of "Lietuvos Bankas"(Lbank.lt website).
+Emonitor is a small tool which can be used for monitoring official currency exchange rates of "Lietuvos Bankas"(lb.lt website).
 
 ## What data does Lbank.lt provide?
 Lbank.lt provides currency exchange rate data in XML and CSV file formats.
