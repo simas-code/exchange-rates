@@ -81,7 +81,7 @@ public class RequestManager {
 		            	String ccyCurr = eleFxRate.getElementsByTagName("Ccy").item(1).getTextContent();
 		            	BigDecimal amtBase = new BigDecimal(eleFxRate.getElementsByTagName("Amt").item(0).getTextContent());
             			BigDecimal amtCurr = new BigDecimal(eleFxRate.getElementsByTagName("Amt").item(1).getTextContent());
-            			BigDecimal amtDiff = startDateRate.subtract(amtCurr);
+            			BigDecimal amtDiff = amtCurr.subtract(startDateRate);
 		            	
 				        if (nodeFxRate.getNodeType() == Node.ELEMENT_NODE ) {
 				        	System.out.printf ("|%10s|%6s|%.4f|%6s|%.4f|%+.4f|\n", dt, ccyBase, amtBase, ccyCurr, amtCurr, amtDiff);
