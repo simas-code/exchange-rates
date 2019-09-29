@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class UserInterface {
+public class Emonitor {
 	private static final String INTRO = "Emonitor is a program which can be used for monitoring currency exchange rates data from Lbank.lt website.\n";
 	private static final String PARAM_NUMBER_ERROR = "Wrong number of parameters, for help write parameter -h.\nInitiating manual input.\n";
 	private static final String HELP = "Help.\n"
