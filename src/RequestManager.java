@@ -5,6 +5,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -19,6 +20,7 @@ import org.w3c.dom.NodeList;
 
 public class RequestManager {
 	private static final String DATE_FORMAT_REGEX = "^((2[0-9])[0-9]{2})-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$";
+	private static final String PARAM_ERROR = "Entered wrong parameter value.\n";
 	private List<Request> requestList;
 	
 	RequestManager(){
@@ -28,16 +30,7 @@ public class RequestManager {
 	RequestManager(List<Request> requestList){
 		setRequestList(requestList);
 	}
-	
-	public void setRequestList(List<Request> requestList) {
-		this.requestList.clear();
-		this.requestList = requestList;
-	}
-	
-	private List<Request> getRequestList(){
-		return this.requestList;
-	}
-	
+
 	public void sendRequests() {
 		HttpURLConnection con = null;
 		URL obj = null;
@@ -66,7 +59,7 @@ public class RequestManager {
 		return new BigDecimal(ele.getElementsByTagName("Amt").item(1).getTextContent()); // Exchange rate at the from date
 	}
 	
-	public void printRequests(Document doc, int reTypeFlg) {
+	private void printRequests(Document doc, int reTypeFlg) {
 		switch (reTypeFlg) {
 			case 1:
 				if ((doc.getElementsByTagName("Err")).getLength() > 0) {
@@ -128,7 +121,7 @@ public class RequestManager {
 					br = new BufferedReader(new InputStreamReader(System.in));
 					from = br.readLine();
 					if (!from.matches(DATE_FORMAT_REGEX)){
-						System.out.print("Entered wrong parameter value.\n");
+						System.out.print(PARAM_ERROR);
 						continue;
 					}
 					dateFrom = sdf.parse(from);
@@ -142,7 +135,7 @@ public class RequestManager {
 					to = br.readLine();
 					if (!to.matches(DATE_FORMAT_REGEX)||
 							dateFrom.after(sdf.parse(to))){
-						System.out.print("Entered wrong parameter value.\n");
+						System.out.print(PARAM_ERROR);
 						continue;
 					}
 					break;
@@ -154,9 +147,10 @@ public class RequestManager {
 					br = new BufferedReader(new InputStreamReader(System.in));
 					ccyString = br.readLine();
 					setRequestList(getRequestList(ccyString,from,to));
-					if (!getRequestList().isEmpty()) {
-						break;
+					if (getRequestList().isEmpty()) {
+						System.out.print(PARAM_ERROR);
 					}
+					break;
 				}
 			} else { // If parameters were provided through console
 				ccyString = args[0];
@@ -171,10 +165,9 @@ public class RequestManager {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
-	public List<Request> getRequestList(String ccyString,String from,String to){
+	private List<Request> getRequestList(String ccyString,String from,String to){
 		// Separating currency code list and populating request list 
 		ArrayList<String> ccy_list = (ArrayList<String>)getCcyParam(ccyString);
 		ArrayList<Request> requestList = new ArrayList<>();
@@ -199,13 +192,17 @@ public class RequestManager {
 		return requestList;
 	}
 	
-	public List<String> getCcyParam(String ccy_params) {
-		ArrayList<String> tp_list = new ArrayList<String>();
-		for (String param : ccy_params.split(";")) {
-			tp_list.add(param);
-		}	
-		return tp_list;
+	private List<String> getCcyParam(String ccy_params) {
+		return new ArrayList<String>(Arrays.asList(ccy_params.split(";")));
 	}
 	
+	public void setRequestList(List<Request> requestList) {
+		this.requestList.clear();
+		this.requestList = requestList;
+	}
+	
+	private List<Request> getRequestList(){
+		return this.requestList;
+	}
 	
 }
