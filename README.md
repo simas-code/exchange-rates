@@ -35,3 +35,5 @@ Lbank.lt provides currency exchange rate data in XML and CSV file formats.
 
 #### Running program for manual parameter input:
 	java Emonitor
+
+.
